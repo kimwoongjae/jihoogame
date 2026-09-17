@@ -213,6 +213,16 @@
     </div>
 
     <script>
+function saveHighScore(gameName, score, isLowerBetter = false) {
+    const records = JSON.parse(localStorage.getItem('game_records') || '{}');
+    const today = new Date().toLocaleDateString();
+    const currentBest = records[gameName] ? records[gameName].score : (isLowerBetter ? Infinity : -1);
+    if (isLowerBetter ? (score < currentBest) : (score > currentBest)) {
+        records[gameName] = { score: score, date: today };
+        localStorage.setItem('game_records', JSON.stringify(records));
+    }
+}
+
     const Sound = {
         play: (freq, type, duration, volume = 0.1) => {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -308,7 +318,7 @@
                     effect.classList.remove('animate-pop');
                 }, 500);
 
-                Sound.win(); if(monsterHp <= 0) {
+                Sound.win(); saveHighScore("수학 몬스터 배틀", level); if(monsterHp <= 0) {
                     alert('몬스터를 물리쳤습니다! 다음 레벨로 이동합니다!');
                     level++;
                     monsterHp = 100 + (level * 10); // Monster gets stronger

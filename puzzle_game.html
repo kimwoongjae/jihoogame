@@ -170,6 +170,16 @@
     </div>
 
     <script>
+function saveHighScore(gameName, score, isLowerBetter = false) {
+    const records = JSON.parse(localStorage.getItem('game_records') || '{}');
+    const today = new Date().toLocaleDateString();
+    const currentBest = records[gameName] ? records[gameName].score : (isLowerBetter ? Infinity : -1);
+    if (isLowerBetter ? (score < currentBest) : (score > currentBest)) {
+        records[gameName] = { score: score, date: today };
+        localStorage.setItem('game_records', JSON.stringify(records));
+    }
+}
+
     const Sound = {
         play: (freq, type, duration, volume = 0.1) => {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -251,7 +261,7 @@
             if (match) { Sound.correct();
                 matchedPairs++;
                 flippedCards = [];
-                if (matchedPairs === emojis.length) {
+                saveHighScore("알록달록 짝 맞추기", attempts, true); if (matchedPairs === emojis.length) {
                     setTimeout(() => {
                         Sound.win(); document.getElementById('success-overlay').style.display = 'flex';
                     }, 600);

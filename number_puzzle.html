@@ -165,6 +165,16 @@
     </div>
 
     <script>
+function saveHighScore(gameName, score, isLowerBetter = false) {
+    const records = JSON.parse(localStorage.getItem('game_records') || '{}');
+    const today = new Date().toLocaleDateString();
+    const currentBest = records[gameName] ? records[gameName].score : (isLowerBetter ? Infinity : -1);
+    if (isLowerBetter ? (score < currentBest) : (score > currentBest)) {
+        records[gameName] = { score: score, date: today };
+        localStorage.setItem('game_records', JSON.stringify(records));
+    }
+}
+
         let level = 1;
         let moves = 0;
         let size = 3;
@@ -232,7 +242,7 @@
             winState.push(null);
 
             const isWin = tiles.every((val, idx) => val === winState[idx]);
-            if (isWin) {
+            saveHighScore("숫자 밀기 퍼즐", level); if (isWin) {
                 setTimeout(() => {
                     document.getElementById('success-overlay').style.display = 'flex';
                 }, 300);

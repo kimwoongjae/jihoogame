@@ -170,6 +170,16 @@
     </div>
 
     <script>
+function saveHighScore(gameName, score, isLowerBetter = false) {
+    const records = JSON.parse(localStorage.getItem('game_records') || '{}');
+    const today = new Date().toLocaleDateString();
+    const currentBest = records[gameName] ? records[gameName].score : (isLowerBetter ? Infinity : -1);
+    if (isLowerBetter ? (score < currentBest) : (score > currentBest)) {
+        records[gameName] = { score: score, date: today };
+        localStorage.setItem('game_records', JSON.stringify(records));
+    }
+}
+
         // ==========================================
         // 📸 사진 설정 부분 (여기서 파일 이름을 바꾸세요!)
         // ==========================================
@@ -292,7 +302,7 @@
             requestAnimationFrame(gameLoop);
         }
 
-        function gameOver() {
+        function gameOver() { saveHighScore("깡총깡총 점프", score);
             gameActive = false;
             setExpression('dead');
             message.style.display = 'block';
