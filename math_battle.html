@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ 수학 몬스터 배틀 ⚔️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #2ed573;
+            --bg-color: #2f3542;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Jua', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--white);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: #57606f;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 6px solid #ced6e0;
+            position: relative;
+        }
+
+        /* HP Bars */
+        .hp-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            gap: 20px;
+        }
+
+        .hp-box {
+            flex: 1;
+            text-align: left;
+        }
+
+        .hp-label {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .hp-bar-bg {
+            background: #2f3542;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #fff;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .player-hp { background: var(--secondary-color); }
+        .monster-hp { background: var(--primary-color); }
+
+        /* Monster Area */
+        .monster-area {
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: transform 0.1s;
+        }
+
+        .monster-shake {
+            animation: shake 0.2s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .problem-box {
+            background: var(--white);
+            color: #2f3542;
+            padding: 1.5rem;
+            border-radius: 20px;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .option-btn { padding: 1rem; font-size: clamp(1.5rem, 5vw, 2.5rem);
+            background: #ced6e0;
+            border: none;
+            padding: 1rem;
+            font-size: 2rem;
+            font-family: 'Jua', sans-serif;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0 #a4b0be;
+            color: #2f3542;
+        }
+
+        .option-btn:hover { background: #dfe4ea; }
+        .option-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #a4b0be; }
+
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        .animate-pop {
+            animation: pop 0.5s ease-out forwards;
+        }
+
+        @keyframes pop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .screen-shake {
+            animation: screen-shake 0.3s ease-in-out;
+        }
+
+        @keyframes screen-shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+    
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            font-family: 'Jua', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 #ccc;
+            z-index: 1000;
+            transition: all 0.2s;
+            border: 2px solid #eee;
+        }
+        .home-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #ccc;
+        }
+        .home-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #ccc;
+        }
+    
+</style>
+</head>
+<body>
+        <a href="index.html" class="home-btn">🏠 홈으로</a>
+    
+    <div class="game-container" id="gameContainer">
+        <div class="hp-container">
+            <div class="hp-box">
+                <div class="hp-label">나 (Player)</div>
+                <div class="hp-bar-bg"><div id="playerHp" class="hp-bar-fill player-hp"></div></div>
+            </div>
+            <div class="hp-box" style="text-align: right;">
+                <div class="hp-label">몬스터 (Monster)</div>
+                <div class="hp-bar-bg"><div id="monsterHp" class="hp-bar-fill monster-hp"></div></div>
+            </div>
+        </div>
+
+        <div class="monster-area" id="monster">👾</div>
+
+        <div class="problem-box" id="problem">? + ? = ?</div>
+
+        <div class="options-grid" id="options"></div>
+
+        <div class="overlay" id="effect">✨</div>
+    </div>
+
+    <script>
+    const Sound = {
+        play: (freq, type, duration, volume = 0.1) => {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        },
+        correct: () => Sound.play(880, 'sine', 0.2),
+        wrong: () => Sound.play(220, 'sawtooth', 0.3),
+        win: () => {
+            Sound.play(523.25, 'sine', 0.2);
+            setTimeout(() => Sound.play(659.25, 'sine', 0.2), 150);
+            setTimeout(() => Sound.play(783.99, 'sine', 0.4), 300);
+        },
+        jump: () => Sound.play(400, 'sine', 0.2, 0.1),
+        hit: () => Sound.play(100, 'square', 0.3, 0.2),
+        click: () => Sound.play(600, 'sine', 0.1, 0.05),
+        move: () => Sound.play(300, 'sine', 0.1, 0.05)
+    };
+
+        let playerHp = 100;
+        let monsterHp = 100;
+        let level = 1;
+        let currentAnswer = 0;
+
+        const monsters = ['👾', '👹', '🐉', '🐙', '🦁', '👻', '👽', '🦖'];
+        const effects = { correct: '💥', wrong: '⚡' };
+
+        function updateHp() {
+            document.getElementById('playerHp').style.width = playerHp + '%';
+            document.getElementById('monsterHp').style.width = monsterHp + '%';
+        }
+
+        function generateProblem() {
+            const range = 5 + (level * 2);
+            const isAddition = Math.random() > 0.5;
+            let a, b;
+
+            if (isAddition) {
+                a = Math.floor(Math.random() * range) + 1;
+                b = Math.floor(Math.random() * range) + 1;
+                currentAnswer = a + b;
+                document.getElementById('problem').innerText = a + ' + ' + b + ' = ?';
+            } else {
+                a = Math.floor(Math.random() * range) + 5;
+                b = Math.floor(Math.random() * a) + 1;
+                currentAnswer = a - b;
+                document.getElementById('problem').innerText = a + ' - ' + b + ' = ?';
+            }
+            generateOptions();
+        }
+
+        function generateOptions() {
+            const container = document.getElementById('options');
+            container.innerHTML = '';
+            const opts = [currentAnswer];
+            while(opts.length < 4) {
+                const w = currentAnswer + Math.floor(Math.random() * 5) - 2;
+                if(w !== currentAnswer && w >= 0) opts.push(w);
+            }
+            opts.sort(() => Math.random() - 0.5);
+
+            opts.forEach(o => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = o;
+                btn.onclick = () => handleAttack(o);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAttack(selected) {
+            const monster = document.getElementById('monster');
+            const container = document.getElementById('gameContainer');
+            const effect = document.getElementById('effect');
+
+            if(selected === currentAnswer) { Sound.correct();
+                // Player Attacks
+                monsterHp -= 25;
+                monster.classList.add('monster-shake');
+                effect.innerText = effects.correct;
+                effect.classList.add('animate-pop');
+                
+                setTimeout(() => {
+                    monster.classList.remove('monster-shake');
+                    effect.classList.remove('animate-pop');
+                }, 500);
+
+                Sound.win(); if(monsterHp <= 0) {
+                    alert('몬스터를 물리쳤습니다! 다음 레벨로 이동합니다!');
+                    level++;
+                    monsterHp = 100 + (level * 10); // Monster gets stronger
+                    document.getElementById('monster').innerText = monsters[level % monsters.length];
+                }
+            } else {
+                // Monster Attacks
+                playerHp -= 20;
+                container.classList.add('screen-shake');
+                effect.innerText = effects.wrong;
+                effect.classList.add('animate-pop');
+
+                setTimeout(() => {
+                    container.classList.remove('screen-shake');
+                    effect.classList.remove('animate-pop');
+                }, 500);
+
+                Sound.wrong(); if(playerHp <= 0) {
+                    alert('으악! 체력이 다 떨어졌어요. 다시 도전해 보세요!');
+                    playerHp = 100;
+                    monsterHp = 100;
+                    level = 1;
+                    document.getElementById('monster').innerText = monsters[0];
+                }
+            }
+            updateHp();
+            generateProblem();
+        }
+
+        updateHp();
+        generateProblem();
+    </script>
+</body>
+</html>

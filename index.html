@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ 마법의 게임 월드 ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ffe66d;
+            --text-color: #2d3436;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Jua', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .hub-container { padding: 0 10px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .header h1 { font-size: clamp(2rem, 8vw, 3.5rem);
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            text-shadow: 3px 3px 0 white, 5px 5px 0 rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            color: #636e72;
+        }
+
+        .game-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+
+        .game-card {
+            background: var(--white);
+            width: 260px;
+            padding: 2rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 6px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.15);
+            border-color: var(--secondary-color);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .game-desc {
+            font-size: 1.1rem;
+            color: #b2bec3;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+            height: 3em;
+            overflow: hidden;
+        }
+
+        .play-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 20px;
+            font-size: 1.3rem;
+            font-family: 'Jua', sans-serif;
+            box-shadow: 0 5px 0 #d63031;
+            transition: all 0.2s;
+        }
+
+        .game-card:hover .play-btn {
+            background: var(--secondary-color);
+            box-shadow: 0 5px 0 #00b894;
+        }
+
+        .play-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #d63031;
+        }
+
+        footer {
+            margin-top: 4rem;
+            font-size: 1.2rem;
+            color: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+    <div class="hub-container">
+        <div class="header">
+            <h1>✨ 마법의 게임 월드 ✨</h1>
+            <p>하고 싶은 게임을 골라보세요!</p>
+        </div>
+
+        <div class="game-grid">
+            <!-- Game 1: Math Battle -->
+            <a href="math_battle.html" class="game-card">
+                <span class="game-icon">⚔️</span>
+                <div class="game-title">수학 몬스터 배틀</div>
+                <div class="game-desc">수학 문제를 풀어서 무시무시한 몬스터를 물리치세요!</div>
+                <div class="play-btn">게임 시작!</div>
+            </a>
+
+            <!-- Game 2: Jump Game -->
+            <a href="jump_game.html" class="game-card">
+                <span class="game-icon">🐰</span>
+                <div class="game-title">깡총깡총 점프</div>
+                <div class="game-desc">장애물을 피해 멀리까지 점프해 보세요!</div>
+                <div class="play-btn">게임 시작!</div>
+            </a>
+
+            <!-- Game 3: Memory Puzzle -->
+            <a href="puzzle_game.html" class="game-card">
+                <span class="game-icon">🎨</span>
+                <div class="game-title">알록달록 짝 맞추기</div>
+                <div class="game-desc">숨겨진 과일 짝을 모두 찾아보세요!</div>
+                <div class="play-btn">게임 시작!</div>
+            </a>
+
+            <!-- Game 4: Number Puzzle -->
+            <a href="number_puzzle.html" class="game-card">
+                <span class="game-icon">🔢</span>
+                <div class="game-title">숫자 밀기 퍼즐</div>
+                <div class="//-desc">숫자 타일을 밀어 순서대로 맞추는 퍼즐 게임!</div>
+                <div class="game-desc">숫자 타일을 밀어 순서대로 맞추는 퍼즐 게임!</div>
+                <div class="play-btn">게임 시작!</div>
+            </a>
+        </div>
+
+        <footer>© 2026 Magic Game World for Kids</footer>
+    </div>
+</body>
+</html>
