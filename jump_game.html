@@ -125,9 +125,38 @@
             cursor: pointer;
             box-shadow: 0 5px 0 #fbc02d;
         }
-    </style>
+    
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            font-family: 'Jua', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 #ccc;
+            z-index: 1000;
+            transition: all 0.2s;
+            border: 2px solid #eee;
+        }
+        .home-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #ccc;
+        }
+        .home-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #ccc;
+        }
+    
+</style>
 </head>
-<body onclick="jump()" ontouchstart="jump()">
+<body style="position:relative;"
+        <a href="index.html" class="home-btn">🏠 홈으로</a>
+     onclick="jump()" ontouchstart="jump()">
     <div id="game-container">
         <div id="score-board">점수: 0</div>
         <div id="player">
