@@ -10,7 +10,7 @@
         :root {
             --sky-color: #87CEEB;
             --grass-color: #7cfc00;
-            --ground-height: 60px;
+            --ground-height: 120px; 
         }
 
         * { box-sizing: border-box; }
@@ -36,7 +36,6 @@
             overflow: hidden;
         }
 
-        /* Fixed Home Button - absolute to the viewport */
         .home-btn {
             position: fixed;
             top: 15px;
@@ -69,7 +68,7 @@
             width: 100%;
             height: var(--ground-height);
             background-color: var(--grass-color);
-            border-top: 8px solid #5eb300;
+            border-top: 10px solid #5eb300;
             z-index: 10;
         }
 
@@ -93,7 +92,6 @@
             display: block;
         }
 
-        /* Fallback if image fails */
         #player-fallback {
             position: absolute;
             font-size: 50px;
@@ -223,7 +221,6 @@
             else if (state === 'dead') playerImg.src = IMAGE_CONFIG.dead;
             else playerImg.src = IMAGE_CONFIG.idle;
             
-            // If image fails, show fallback
             playerImg.onerror = () => { playerImg.style.display = 'none'; };
             playerImg.onload = () => { playerImg.style.display = 'block'; };
         }
@@ -234,10 +231,10 @@
 
             isJumping = true;
             setExpression('jump');
-            player.style.bottom = '200px';
+            player.style.bottom = '320px'; // Higher jump
             
             setTimeout(() => {
-                player.style.bottom = '60px'; // var(--ground-height)
+                player.style.bottom = '120px'; // Match --ground-height
                 setTimeout(() => {
                     isJumping = false;
                     if(gameActive) setExpression('idle');
@@ -305,7 +302,7 @@
         }
 
         window.addEventListener('resize', () => {
-            player.style.bottom = '60px';
+            player.style.bottom = '120px';
         });
 
         for (let i = 0; i < 5; i++) {
