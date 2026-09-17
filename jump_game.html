@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🐰 내 사진으로 하는 점프 게임! 🐰</title>
+    <title>🐰 슈퍼 깡총 점프! 🐰</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
@@ -13,9 +13,11 @@
             --ground-height: 80px;
         }
 
-        body {
+        body, html {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             font-family: 'Jua', sans-serif;
             background-color: var(--sky-color);
@@ -32,6 +34,29 @@
             overflow: hidden;
         }
 
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            font-family: 'Jua', sans-serif;
+            font-size: 1.1rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 #ccc;
+            z-index: 1000;
+            transition: all 0.2s;
+            border: 2px solid #eee;
+        }
+
+        .home-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #ccc;
+        }
+
         .cloud {
             position: absolute;
             background: white;
@@ -39,12 +64,12 @@
             opacity: 0.8;
             z-index: 1;
             pointer-events: none;
-            transition: transform 0.1s linear;
         }
 
         #ground {
             position: absolute;
             bottom: 0;
+            left: 0;
             width: 100%;
             height: var(--ground-height);
             background-color: var(--grass-color);
@@ -55,9 +80,9 @@
         #player {
             position: absolute;
             bottom: var(--ground-height);
-            left: 50px;
-            width: 80px;
-            height: 80px;
+            left: 40px;
+            width: 60px;
+            height: 60px;
             z-index: 20;
             display: flex;
             justify-content: center;
@@ -69,7 +94,6 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* 배경이 투명한 PNG 파일일 때 가장 예쁩니다 */
         }
 
         .obstacle {
@@ -87,8 +111,8 @@
         #score-board {
             position: absolute;
             top: 20px;
-            left: 20px;
-            font-size: 2rem;
+            right: 20px;
+            font-size: 1.8rem;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             z-index: 100;
@@ -107,17 +131,19 @@
             border-radius: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             border: 5px solid var(--grass-color);
+            width: 80%;
+            max-width: 300px;
         }
 
         #message h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             color: #ff4757;
             margin: 0 0 1rem 0;
         }
 
         #restart-btn {
             padding: 1rem 2rem;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-family: 'Jua', sans-serif;
             background: #fffa65;
             border: 4px solid #fbc02d;
@@ -125,39 +151,11 @@
             cursor: pointer;
             box-shadow: 0 5px 0 #fbc02d;
         }
-    
-        .home-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            background: white;
-            color: #333;
-            text-decoration: none;
-            font-family: 'Jua', sans-serif;
-            font-size: 1.2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 0 #ccc;
-            z-index: 1000;
-            transition: all 0.2s;
-            border: 2px solid #eee;
-        }
-        .home-btn:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #ccc;
-        }
-        .home-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #ccc;
-        }
-    
-</style>
+    </style>
 </head>
-<body style="position:relative;"
-        <a href="index.html" class="home-btn">🏠 홈으로</a>
-     onclick="jump()" ontouchstart="jump()">
+<body onclick="jump()" ontouchstart="jump()">
     <div id="game-container">
+        <a href="index.html" class="home-btn">🏠 홈으로</a>
         <div id="score-board">점수: 0</div>
         <div id="player">
             <img id="playerImg" src="player_idle.png" alt="player">
@@ -170,26 +168,6 @@
     </div>
 
     <script>
-function saveHighScore(gameName, score, isLowerBetter = false) {
-    const records = JSON.parse(localStorage.getItem('game_records') || '{}');
-    const today = new Date().toLocaleDateString();
-    const currentBest = records[gameName] ? records[gameName].score : (isLowerBetter ? Infinity : -1);
-    if (isLowerBetter ? (score < currentBest) : (score > currentBest)) {
-        records[gameName] = { score: score, date: today };
-        localStorage.setItem('game_records', JSON.stringify(records));
-    }
-}
-
-        // ==========================================
-        // 📸 사진 설정 부분 (여기서 파일 이름을 바꾸세요!)
-        // ==========================================
-        const IMAGE_CONFIG = {
-            idle: 'player_idle.png', // 평소 사진
-            jump: 'player_jump.png',   // 점프할 때 사진
-            dead: 'player_dead.png'    // 부딪혔을 때 사진
-        };
-        // ==========================================
-
         const player = document.getElementById('player');
         const playerImg = document.getElementById('playerImg');
         const gameContainer = document.getElementById('game-container');
@@ -203,6 +181,12 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
         let spawnRate = 1500;
         let lastSpawnTime = 0;
         let clouds = [];
+
+        const IMAGE_CONFIG = {
+            idle: 'player_idle.png',
+            jump: 'player_jump.png',
+            dead: 'player_dead.png'
+        };
 
         function createCloud() {
             const cloud = document.createElement('div');
@@ -230,7 +214,6 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
         }
 
         function setExpression(state) {
-            // 설정된 사진이 있으면 적용하고, 없으면 기본 사진을 사용합니다.
             if (state === 'jump') playerImg.src = IMAGE_CONFIG.jump;
             else if (state === 'dead') playerImg.src = IMAGE_CONFIG.dead;
             else playerImg.src = IMAGE_CONFIG.idle;
@@ -302,7 +285,7 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
             requestAnimationFrame(gameLoop);
         }
 
-        function gameOver() { saveHighScore("깡총깡총 점프", score);
+        function gameOver() {
             gameActive = false;
             setExpression('dead');
             message.style.display = 'block';
