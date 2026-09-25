@@ -194,10 +194,19 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
             // Shuffle
             shuffle();
 
+            moves = 0;
+            document.getElementById('moves').innerText = moves;
+
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const tileSize = Math.max(48, Math.min(90, Math.floor((Math.min(window.innerWidth, window.innerHeight) - 80) / size)));
+
             // Update CSS Grid
             boardElement.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            boardElement.style.width = (size * 100) + 'px';
-            boardElement.style.height = (size * 100) + 'px';
+            boardElement.style.width = (size * tileSize) + 'px';
+            boardElement.style.height = (size * tileSize) + 'px';
             
             boardElement.innerHTML = '';
             tiles.forEach((tile, index) => {
@@ -208,8 +217,6 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
                     tileDiv.innerText = '';
                 } else {
                     tileDiv.innerText = tile;
-                    tileDiv.style.width = '90px';
-                    tileDiv.style.height = '90px';
                     tileDiv.style.fontSize = size > 4 ? '1.5rem' : '2.5rem';
                     tileDiv.onclick = () => moveTile(index);
                 }
@@ -231,7 +238,7 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
                 [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
                 moves++;
                 document.getElementById('moves').innerText = moves;
-                createBoard();
+                renderBoard();
                 checkWin();
             }
         }
@@ -242,7 +249,8 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
             winState.push(null);
 
             const isWin = tiles.every((val, idx) => val === winState[idx]);
-            saveHighScore("숫자 밀기 퍼즐", level); if (isWin) {
+            if (isWin) {
+                saveHighScore("숫자 밀기 퍼즐", level);
                 setTimeout(() => {
                     document.getElementById('success-overlay').style.display = 'flex';
                 }, 300);
@@ -276,6 +284,7 @@ function saveHighScore(gameName, score, isLowerBetter = false) {
 
         document.getElementById('level').innerText = level;
         createBoard();
+        window.addEventListener('resize', renderBoard);
     </script>
 </body>
 </html>

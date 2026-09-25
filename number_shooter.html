@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 숫자 별 사격대</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+        * { box-sizing: border-box; }
+        :root { --navy:#14213d; --blue:#35a7ff; --yellow:#ffd166; --pink:#ff70a6; --white:#fff; }
+        body { margin:0; min-height:100vh; overflow:hidden; font-family:'Jua',sans-serif; color:white; background:linear-gradient(#102454,#2867a4); user-select:none; }
+        body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.65; background-image:radial-gradient(circle,white 1.5px,transparent 2px); background-size:53px 53px; }
+        .home { position:fixed; z-index:20; top:14px; left:14px; color:#25324d; background:white; padding:9px 15px; border-radius:16px; text-decoration:none; box-shadow:0 5px 0 #b9d6ec; }
+        .hud { position:relative; z-index:5; display:flex; justify-content:center; gap:12px; padding:14px 85px 8px; }
+        .badge { min-width:105px; padding:8px 14px; border-radius:18px; background:rgba(10,26,65,.78); border:2px solid rgba(255,255,255,.5); text-align:center; font-size:clamp(1rem,3vw,1.25rem); }
+        .mission { position:relative; z-index:5; width:min(560px,90vw); margin:3px auto 10px; padding:10px 20px; text-align:center; color:#25324d; background:var(--yellow); border-radius:24px; box-shadow:0 7px 0 #e0a824; }
+        .mission small { display:block; font-size:1rem; }
+        #problem { font-size:clamp(2rem,7vw,3.2rem); line-height:1.05; }
+        #arena { position:relative; width:min(900px,96vw); height:calc(100vh - 190px); min-height:360px; margin:auto; overflow:hidden; border:3px solid rgba(255,255,255,.28); border-radius:30px 30px 0 0; background:linear-gradient(rgba(255,255,255,.03),rgba(6,19,48,.35)); }
+        .target { position:absolute; width:clamp(72px,13vw,105px); aspect-ratio:1; border:0; border-radius:50%; font-family:'Jua',sans-serif; font-size:clamp(1.8rem,6vw,3rem); color:#25324d; background:radial-gradient(circle at 35% 30%,#fff 0 10%,#9fe7ff 12% 46%,#35a7ff 48% 100%); box-shadow:0 0 0 6px rgba(255,255,255,.7),0 8px 0 #176aa6,0 12px 25px rgba(0,0,0,.3); cursor:crosshair; animation:float 2.2s ease-in-out infinite alternate; touch-action:manipulation; }
+        .target:nth-child(2n) { background:radial-gradient(circle at 35% 30%,#fff 0 10%,#ffe99b 12% 46%,#ffd166 48% 100%); box-shadow:0 0 0 6px rgba(255,255,255,.7),0 8px 0 #d49b13,0 12px 25px rgba(0,0,0,.3); animation-delay:-.7s; }
+        .target:nth-child(3n) { background:radial-gradient(circle at 35% 30%,#fff 0 10%,#ffb3d0 12% 46%,#ff70a6 48% 100%); box-shadow:0 0 0 6px rgba(255,255,255,.7),0 8px 0 #c84175,0 12px 25px rgba(0,0,0,.3); animation-delay:-1.3s; }
+        .target:active { transform:scale(.9); }
+        @keyframes float { to { transform:translateY(-14px) rotate(4deg); } }
+        .cannon { position:absolute; z-index:4; left:50%; bottom:8px; transform:translateX(-50%); font-size:70px; filter:drop-shadow(0 7px 4px rgba(0,0,0,.35)); }
+        .shot { position:absolute; z-index:3; width:16px; height:16px; border-radius:50%; background:white; box-shadow:0 0 10px 5px #6ff,0 0 22px 10px #35a7ff; pointer-events:none; transition:transform .25s linear,opacity .25s; }
+        .pop { animation:pop .35s forwards !important; }
+        @keyframes pop { 50%{transform:scale(1.35)} 100%{transform:scale(0);opacity:0} }
+        #message { position:absolute; z-index:10; left:50%; top:48%; transform:translate(-50%,-50%) scale(0); font-size:clamp(2rem,8vw,4.5rem); text-align:center; text-shadow:0 4px 0 #14213d; pointer-events:none; }
+        #message.show { animation:message .65s ease-out; }
+        @keyframes message { 30%{transform:translate(-50%,-50%) scale(1.25)} 75%{transform:translate(-50%,-50%) scale(1)} 100%{transform:translate(-50%,-60%) scale(.9);opacity:0} }
+        .overlay { display:none; position:fixed; z-index:30; inset:0; background:rgba(5,15,40,.82); align-items:center; justify-content:center; padding:20px; }
+        .overlay.show { display:flex; }
+        .panel { width:min(440px,92vw); padding:28px; border-radius:32px; background:white; color:#25324d; text-align:center; border:8px solid var(--yellow); box-shadow:0 15px 0 rgba(0,0,0,.25); }
+        .panel h2 { margin:0 0 12px; color:#ef476f; font-size:2.5rem; }
+        .panel p { font-size:1.3rem; }
+        .start-btn { border:0; border-radius:20px; padding:13px 28px; font:1.4rem 'Jua',sans-serif; color:white; background:#2fbf71; box-shadow:0 6px 0 #18894a; cursor:pointer; }
+        .start-btn:active { transform:translateY(4px); box-shadow:0 2px 0 #18894a; }
+        @media (max-width:600px) { .hud{padding-top:62px; padding-left:8px; padding-right:8px}.badge{min-width:0;flex:1;padding:7px 5px} #arena{height:calc(100vh - 235px)} }
+    </style>
+</head>
+<body>
+    <a class="home" href="index.html">🏠 홈으로</a>
+    <div class="hud">
+        <div class="badge">⭐ 점수 <span id="score">0</span></div>
+        <div class="badge">🔥 콤보 <span id="combo">0</span></div>
+        <div class="badge">⏰ <span id="time">60</span>초</div>
+    </div>
+    <div class="mission"><small>정답 숫자를 찾아 맞혀요!</small><strong id="problem">준비!</strong></div>
+    <main id="arena" aria-label="숫자 표적 게임장">
+        <div id="message"></div>
+        <div class="cannon" aria-hidden="true">🚀</div>
+    </main>
+    <div class="overlay show" id="startOverlay">
+        <div class="panel"><h2>🚀 숫자 별 사격대</h2><p>문제를 보고 정답 숫자 표적을 눌러요.<br>연속으로 맞히면 점수가 더 커져요!</p><button class="start-btn" onclick="startGame()">출동하기!</button></div>
+    </div>
+    <div class="overlay" id="endOverlay">
+        <div class="panel"><h2>🎉 임무 완료!</h2><p>점수는 <strong id="finalScore">0</strong>점이에요!<br><span id="resultText"></span></p><button class="start-btn" onclick="startGame()">다시 도전!</button></div>
+    </div>
+    <script>
+        let score=0, combo=0, timeLeft=60, answer=0, playing=false, timer=null, locked=false;
+        const arena=document.getElementById('arena');
+        const praise=['정답! 🌟','멋져! 👍','집중력 최고! 🚀','대단해! 🎉'];
+
+        function saveHighScore(gameName, value){
+            const records=JSON.parse(localStorage.getItem('game_records')||'{}');
+            const best=records[gameName]?.score??-1;
+            if(value>best){ records[gameName]={score:value,date:new Date().toLocaleDateString()}; localStorage.setItem('game_records',JSON.stringify(records)); }
+        }
+        function startGame(){
+            clearInterval(timer); score=0; combo=0; timeLeft=60; playing=true; locked=false;
+            document.getElementById('startOverlay').classList.remove('show');
+            document.getElementById('endOverlay').classList.remove('show');
+            updateHud(); nextRound();
+            timer=setInterval(()=>{ timeLeft--; updateHud(); if(timeLeft<=0) endGame(); },1000);
+        }
+        function nextRound(){
+            if(!playing)return;
+            locked=false;
+            arena.querySelectorAll('.target,.shot').forEach(el=>el.remove());
+            const level=Math.min(3,1+Math.floor(score/80));
+            let a,b,sign;
+            if(level===1){ a=random(1,9); b=random(1,9); sign='+'; answer=a+b; }
+            else if(level===2 && Math.random()<.5){ a=random(4,18); b=random(1,a); sign='−'; answer=a-b; }
+            else { a=random(2,level===3?15:10); b=random(2,level===3?10:6); sign='+'; answer=a+b; }
+            document.getElementById('problem').textContent=`${a} ${sign} ${b} = ?`;
+            const values=[answer];
+            while(values.length<4){ const n=Math.max(0,answer+random(-5,5)); if(!values.includes(n))values.push(n); }
+            shuffle(values).forEach((value,i)=>makeTarget(value,i));
+        }
+        function makeTarget(value,index){
+            const positions=[[8,12],[67,14],[18,48],[70,51]];
+            const button=document.createElement('button');
+            button.className='target'; button.textContent=value; button.setAttribute('aria-label',`${value} 표적`);
+            button.style.left=`calc(${positions[index][0]}% + ${random(-3,3)}px)`;
+            button.style.top=`calc(${positions[index][1]}% + ${random(-6,6)}px)`;
+            button.onclick=()=>shoot(button,value);
+            arena.appendChild(button);
+        }
+        function shoot(target,value){
+            if(!playing||locked)return;
+            fireEffect(target);
+            if(value===answer){
+                locked=true; combo++; score+=10+Math.min(combo,5)*2; target.classList.add('pop');
+                showMessage(praise[random(0,praise.length-1)]);
+                updateHud(); setTimeout(nextRound,600);
+            }else{
+                combo=0; score=Math.max(0,score-2); target.animate([{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:220});
+                showMessage('다시 찾아봐! 😊'); updateHud();
+            }
+        }
+        function fireEffect(target){
+            const shot=document.createElement('i'); shot.className='shot';
+            const a=arena.getBoundingClientRect(), t=target.getBoundingClientRect();
+            const startX=a.width/2-8, startY=a.height-75;
+            shot.style.left=startX+'px'; shot.style.top=startY+'px'; arena.appendChild(shot);
+            requestAnimationFrame(()=>{ shot.style.transform=`translate(${t.left-a.left+t.width/2-startX}px,${t.top-a.top+t.height/2-startY}px)`; shot.style.opacity='0'; });
+            setTimeout(()=>shot.remove(),300);
+        }
+        function showMessage(text){ const el=document.getElementById('message'); el.textContent=text; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show'); }
+        function updateHud(){ document.getElementById('score').textContent=score; document.getElementById('combo').textContent=combo; document.getElementById('time').textContent=timeLeft; }
+        function endGame(){
+            playing=false; clearInterval(timer); arena.querySelectorAll('.target,.shot').forEach(el=>el.remove());
+            saveHighScore('숫자 별 사격대',score); document.getElementById('finalScore').textContent=score;
+            document.getElementById('resultText').textContent=score>=150?'숫자 사격 대장이에요!':score>=80?'정말 멋진 집중력이에요!':'한 번 더 하면 더 잘할 수 있어요!';
+            document.getElementById('endOverlay').classList.add('show');
+        }
+        function random(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+        function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=random(0,i); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+    </script>
+</body>
+</html>
