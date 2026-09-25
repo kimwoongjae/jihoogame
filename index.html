@@ -59,6 +59,7 @@
         }
 
         .game-card {
+            position: relative;
             background: var(--white);
             width: 260px;
             padding: 2rem;
@@ -117,6 +118,18 @@
             box-shadow: 0 5px 0 #00b894;
         }
 
+        .new-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            padding: 5px 11px;
+            border-radius: 14px;
+            background: #ff4757;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 0 #c92f3d;
+        }
+
         .play-btn:active {
             transform: translateY(3px);
             box-shadow: 0 2px 0 #d63031;
@@ -137,6 +150,15 @@
         </div>
 
         <div class="game-grid">
+            <!-- New Game: Number Shooter -->
+            <a href="number_shooter.html" class="game-card">
+                <span class="new-badge">NEW</span>
+                <span class="game-icon">🚀</span>
+                <div class="game-title">숫자 별 사격대</div>
+                <div class="game-desc">문제를 풀고 정답 숫자 표적을 별빛 탄환으로 맞혀보세요!</div>
+                <div class="play-btn">게임 시작!</div>
+            </a>
+
             <!-- Game 1: Math Battle -->
             <a href="math_battle.html" class="game-card">
                 <span class="game-icon">⚔️</span>
@@ -170,13 +192,6 @@
                 <div class="play-btn">게임 시작!</div>
             </a>
 
-            <!-- Game 5: Number Shooter -->
-            <a href="number_shooter.html" class="game-card">
-                <span class="game-icon">🚀</span>
-                <div class="game-title">숫자 별 사격대</div>
-                <div class="game-desc">문제를 풀고 정답 숫자 표적을 별빛 탄환으로 맞혀보세요!</div>
-                <div class="play-btn">게임 시작!</div>
-            </a>
         </div>
 
         <footer>© 2026 Magic Game World for Kids</footer>
